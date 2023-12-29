@@ -22,13 +22,18 @@ with st.sidebar:
     patient_age = st.number_input("Patient's Age", min_value=0, max_value=150, value=30)
     patient_gender = st.radio("Patient's Gender", ["Male", "Female", "Other"])
     symptoms = st.text_area("Symptoms (comma-separated)", "Fever, Cough, Fatigue")
-    diagnosis = st.text_area("Diagnosis")
+    medical_history = st.text_area("Medical History")
+    physical_examination = st.text_area("Physical Examination Findings")
+    provisional_diagnosis = st.text_area("Provisional Diagnosis")
+    investigations = st.text_area("Investigations Conducted")
     treatment_plan = st.text_area("Treatment Plan")
+    follow_up_instructions = st.text_area("Follow-Up Instructions")
     st.markdown("-------")
 
     generatebutt = st.button("Generate Medical Summary Report")
 
-def generate_report(patient_name, patient_age, patient_gender, symptoms, diagnosis, treatment_plan, report_date):
+def generate_report(patient_name, patient_age, patient_gender, symptoms, medical_history, physical_examination, 
+                    provisional_diagnosis, investigations, treatment_plan, follow_up_instructions, report_date):
     doc = docx.Document()
 
     # Add Title Page followed by section summary
@@ -48,13 +53,29 @@ def generate_report(patient_name, patient_age, patient_gender, symptoms, diagnos
     doc.add_heading('Symptoms')
     doc.add_paragraph(symptoms)
 
-    # Diagnosis
-    doc.add_heading('Diagnosis')
-    doc.add_paragraph(diagnosis)
+    # Medical History
+    doc.add_heading('Medical History')
+    doc.add_paragraph(medical_history)
+
+    # Physical Examination Findings
+    doc.add_heading('Physical Examination Findings')
+    doc.add_paragraph(physical_examination)
+
+    # Provisional Diagnosis
+    doc.add_heading('Provisional Diagnosis')
+    doc.add_paragraph(provisional_diagnosis)
+
+    # Investigations Conducted
+    doc.add_heading('Investigations Conducted')
+    doc.add_paragraph(investigations)
 
     # Treatment Plan
     doc.add_heading('Treatment Plan')
     doc.add_paragraph(treatment_plan)
+
+    # Follow-Up Instructions
+    doc.add_heading('Follow-Up Instructions')
+    doc.add_paragraph(follow_up_instructions)
 
     doc.save('Medical Summary Report.docx')
     data = open('Medical Summary Report.docx', "rb").read()
@@ -84,8 +105,9 @@ for message in st.session_state.messages:
 if generatebutt:
     if openai_api_key.startswith('sk-'):
         date_today = datetime.date.today()
-        report_generated_summary = generate_response(f"I need assistance in generating a medical summary report for my patient named {patient_name}. The patient is {patient_age} years old, and the symptoms include {symptoms}. The diagnosis is {diagnosis}, and the treatment plan is {treatment_plan}. Please provide a detailed and comprehensive report with all relevant information.")
-        generate_report(patient_name, patient_age, patient_gender, symptoms, diagnosis, treatment_plan, date_today)
+        report_generated_summary = generate_response(f"I need assistance in generating a detailed medical summary report for my patient named {patient_name}. The patient is {patient_age} years old, and the symptoms include {symptoms}. The medical history is {medical_history}, and the provisional diagnosis is {provisional_diagnosis}. Physical examination findings are {physical_examination}. Investigations conducted include {investigations}. The treatment plan is {treatment_plan}, and follow-up instructions are {follow_up_instructions}. Please provide a comprehensive report with all relevant details.")
+        generate_report(patient_name, patient_age, patient_gender, symptoms, medical_history, physical_examination, 
+                        provisional_diagnosis, investigations, treatment_plan, follow_up_instructions, date_today)
     else:
         st.warning('Please enter your OpenAI API key!', icon='⚠')
 
