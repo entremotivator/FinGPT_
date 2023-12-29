@@ -3,3 +3,4 @@ langchain==0.0.210
 python-docx==0.8.11
 openai==0.27.8
 openapi-schema-pydantic==1.2.4
+langchain
